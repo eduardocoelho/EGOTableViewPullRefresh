@@ -117,15 +117,14 @@
 		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 
-        _lastUpdatedLabel.text = NSLocalizedString(@"Last Updated:", Nil);
-        
         if (date) {
-            _lastUpdatedLabel.text = [_lastUpdatedLabel.text stringByAppendingFormat:@" %@",
+            _lastUpdatedLabel.text = [NSString stringWithFormat:@"%@ %@",
+                                      NSLocalizedString(@"Last Updated:", Nil),
                                       [dateFormatter stringFromDate:date]];
+        } else {
+            _lastUpdatedLabel.text = @"";
         }
-
-		[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text
-                                                  forKey:@"EGORefreshTableView_LastRefresh"];
+		[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 	} else {
