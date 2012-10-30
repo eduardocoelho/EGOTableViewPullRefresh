@@ -31,6 +31,11 @@
 #define FLIP_ANIMATION_DURATION 0.18f
 
 
+@interface EGORefreshTableHeaderView ()
+@property(nonatomic,assign) BOOL showLastUpdatedLabel;
+@end
+
+
 @interface EGORefreshTableHeaderView (Private)
 - (void)setState:(EGOPullRefreshState)aState;
 @end
@@ -38,11 +43,12 @@
 @implementation EGORefreshTableHeaderView
 
 @synthesize delegate=_delegate;
+@synthesize showLastUpdatedLabel=_showLastUpdatedLabel;
 
 
 - (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor  {
     if((self = [super initWithFrame:frame])) {
-		
+        
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		self.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
 
@@ -89,8 +95,12 @@
 		[self addSubview:view];
 		_activityView = view;
 		[view release];
+        
+        _activityView.center = CGPointMake(self.center.x, _activityView.center.y);
 		
 		
+        self.showLastUpdatedLabel = NO;
+        
 		[self setState:EGOOPullRefreshNormal];
 		
     }
@@ -101,6 +111,17 @@
 
 - (id)initWithFrame:(CGRect)frame  {
   return [self initWithFrame:frame arrowImageName:@"blueArrow.png" textColor:TEXT_COLOR];
+}
+
+
+- (void)setShowLastUpdatedLabel:(BOOL)showLastUpdatedLabel {
+    _showLastUpdatedLabel = showLastUpdatedLabel;
+    
+    //
+    // currently allow only the remotion of the label
+    if (showLastUpdatedLabel == NO) {
+        _lastUpdatedLabel.hidden = YES;
+    }
 }
 
 #pragma mark -
@@ -169,7 +190,7 @@
 			break;
 		case EGOOPullRefreshLoading:
 			
-			_statusLabel.text = NSLocalizedString(@"Loading...", @"Loading Status");
+			_statusLabel.text = Nil;//NSLocalizedString(@"Loading...", @"Loading Status");
 			[_activityView startAnimating];
 			[CATransaction begin];
 			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
